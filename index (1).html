@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adviser Self-Assessment | Dare to Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-mid: #9FE1CB; --teal-dark: #0F6E56;
+    --text: #1a1a1a; --text-muted: #5a5a5a; --text-faint: #8a8a8a;
+    --border: rgba(0,0,0,0.1); --border-mid: rgba(0,0,0,0.18);
+    --bg: #fafaf8; --white: #ffffff;
+    --radius: 10px; --radius-lg: 16px;
+  }
+  body { font-family: 'DM Sans', sans-serif; font-weight: 400; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+  .page { max-width: 660px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2.5rem; }
+  .brand-dot { width: 28px; height: 28px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .brand-name { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--text-muted); }
+  .progress-track { height: 2px; background: var(--border); border-radius: 2px; margin-bottom: 2.5rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--teal); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 0%; }
+  .screen { display: none; } .screen.active { display: block; }
+  .welcome-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+  .welcome-title { font-family: 'DM Serif Display', serif; font-size: 34px; line-height: 1.15; color: var(--text); margin-bottom: 16px; }
+  .welcome-title em { font-style: italic; color: var(--teal-dark); }
+  .welcome-body { font-size: 16px; color: var(--text-muted); line-height: 1.75; margin-bottom: 2rem; max-width: 520px; }
+  .section-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2rem; }
+  .pill { padding: 6px 14px; border-radius: 20px; font-size: 13px; border: 1px solid var(--border-mid); color: var(--text-muted); background: var(--white); }
+  .meta-line { font-size: 13px; color: var(--text-faint); margin-bottom: 2rem; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-mid); background: transparent; color: var(--text); transition: background 0.15s, transform 0.1s; text-decoration: none; }
+  .btn:hover { background: rgba(0,0,0,0.04); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+  .btn-primary { background: var(--teal); color: white; border-color: var(--teal); }
+  .btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+  .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+  .section-heading { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1.2; margin-bottom: 8px; }
+  .section-intro { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .question-block { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+  .question-block:last-of-type { border-bottom: none; }
+  .question-text { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.6; margin-bottom: 12px; }
+  .options-list { display: flex; flex-direction: column; gap: 7px; }
+  .option { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; background: var(--white); transition: border-color 0.15s, background 0.15s; text-align: left; width: 100%; font-family: 'DM Sans', sans-serif; }
+  .option:hover { border-color: var(--teal-mid); background: #f7fdfb; }
+  .option.selected { border-color: var(--teal); background: var(--teal-light); }
+  .option-radio { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid #ccc; flex-shrink: 0; margin-top: 2px; transition: border-color 0.15s, background 0.15s; display: flex; align-items: center; justify-content: center; }
+  .option.selected .option-radio { border-color: var(--teal); background: var(--teal); }
+  .option.selected .option-radio::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: white; }
+  .option-text { font-size: 14px; color: var(--text); line-height: 1.55; }
+  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .answered-count { font-size: 13px; color: var(--text-faint); }
+  .results-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .results-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+  .results-title { font-family: 'DM Serif Display', serif; font-size: 28px; line-height: 1.2; margin-bottom: 8px; }
+  .results-subtitle { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+  .result-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; background: var(--white); }
+  .result-card-section { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 5px; }
+  .result-pattern-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); margin-bottom: 10px; }
+  .result-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 14px; }
+  .result-nudge { font-size: 13px; color: var(--teal-dark); line-height: 1.65; padding: 12px 14px; background: var(--teal-light); border-radius: var(--radius); border-left: 3px solid var(--teal); }
+  .result-nudge strong { display: block; font-weight: 500; margin-bottom: 3px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--teal-dark); }
+  .results-note { margin-top: 1.5rem; padding: 1.25rem; background: #f4f4f1; border-radius: var(--radius); font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .results-note strong { color: var(--text); font-weight: 500; }
+  .results-actions { display: flex; gap: 10px; margin-top: 1.5rem; flex-wrap: wrap; }
+  @media print {
+    body { background: white; }
+    .brand, .progress-track, .results-actions { display: none !important; }
+    .result-card { break-inside: avoid; border: 1px solid #ccc; page-break-inside: avoid; }
+    .result-nudge { background: #f0faf6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .screen { display: none !important; }
+    #screen-results { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="brand">
+    <div class="brand-dot">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" fill="white"/><path d="M2 13c0-2.76 2.24-4.5 5-4.5s5 1.74 5 4.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </div>
+    <span class="brand-name">Dare to Care</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+  <div class="screen active" id="screen-welcome">
+    <p class="welcome-eyebrow">Module 4 · Adviser self-assessment</p>
+    <h1 class="welcome-title">What you bring to <em>every</em> meeting</h1>
+    <p class="welcome-body">This assessment helps you notice what you carry into client conversations — your money story, your assumptions about clients, and your patterns when things get difficult.<br><br>There are no right or wrong answers. The value is in the noticing.</p>
+    <div class="section-pills">
+      <span class="pill">Your money story</span>
+      <span class="pill">Assumptions about clients</span>
+      <span class="pill">Patterns in difficult conversations</span>
+    </div>
+    <p class="meta-line">12 questions &nbsp;·&nbsp; approximately 5 minutes</p>
+    <button class="btn btn-primary" onclick="startAssessment()">Begin assessment <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <div class="screen" id="screen-questions">
+    <p class="section-eyebrow" id="q-eyebrow"></p>
+    <h2 class="section-heading" id="q-heading"></h2>
+    <p class="section-intro" id="q-intro"></p>
+    <div id="questions-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="btn-back" onclick="goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+      <span class="answered-count" id="answered-count"></span>
+      <button class="btn btn-primary" id="btn-next" onclick="goNext()" disabled><span id="next-label">Next section</span> <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-results">
+    <div class="results-header">
+      <p class="results-eyebrow">Your results</p>
+      <h2 class="results-title">What the assessment found</h2>
+      <p class="results-subtitle">Your responses point to some patterns worth noticing. These aren't diagnoses — they're starting points for reflection.</p>
+    </div>
+    <div id="results-container"></div>
+    <div class="results-note"><strong>A note on these results</strong><br>This assessment identifies tendencies, not fixed traits. The point is awareness — you can't manage what you haven't noticed. Revisit it after a challenging period and see if anything shifts.</div>
+    <div class="results-actions">
+      <button class="btn btn-primary" onclick="window.print()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="5" width="10" height="7" rx="1" stroke="white" stroke-width="1.3"/><path d="M4 5V3a1 1 0 011-1h4a1 1 0 011 1v2" stroke="white" stroke-width="1.3"/><path d="M4 9h6M4 11h4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg> Save or print results</button>
+      <button class="btn" onclick="restartAssessment()">Start again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const sections=[{eyebrow:"Section 1 of 3",heading:"Your money story",intro:"Every adviser brings a personal relationship with money into the room. These questions help you notice how your own history might be shaping your practice.",questions:[{text:"When a client says they don't want to look at the numbers right now, my first instinct is:",options:[{text:"Frustration — the numbers are exactly what they need to look at"},{text:"Curiosity — I wonder what's making that feel hard for them"},{text:"Concern — maybe I haven't explained things clearly enough"},{text:"Patience — I've learned to let them come to it in their own time"}]},{text:"Thinking about your own upbringing, money was generally treated as:",options:[{text:"Something to be careful with — scarcity was real or nearby"},{text:"A source of security — having it meant safety"},{text:"Something not discussed — private or even taboo"},{text:"A tool — practical, useful, fairly neutral"}]},{text:"When a client makes a financial decision I think is a mistake, I typically:",options:[{text:"Find it genuinely hard to let go — I keep trying to change their mind"},{text:"Document it carefully and move on — it's their choice"},{text:"Worry about it afterwards — it stays with me"},{text:"Trust the process — we've worked through it together"}]},{text:"In your practice, you're most energised by clients who:",options:[{text:"Act decisively and follow through"},{text:"Engage deeply and ask good questions"},{text:"Trust your judgement and give you room to work"},{text:"Grow and change over time — I'm in it for the long game"}]}]},{eyebrow:"Section 2 of 3",heading:"Assumptions about clients",intro:"We all carry assumptions — often unconscious — about what clients want, what they're capable of, and what they need from us. Naming them is the first step to managing them.",questions:[{text:"When a client appears emotionally distressed in a meeting, I most often assume:",options:[{text:"They need information — once they understand the facts, they'll feel better"},{text:"Something has happened outside this meeting that I don't know about yet"},{text:"They're not ready to make decisions today"},{text:"Their emotional state is the most important thing to address first"}]},{text:"When I think about which clients are hardest to help, they tend to be:",options:[{text:"Clients who won't act, even when the path is clear"},{text:"Clients with very different values to mine"},{text:"Clients in genuine crisis — the stakes feel high"},{text:"Clients who don't trust the process"}]},{text:"If I'm honest, I sometimes assume clients who take a long time to decide are:",options:[{text:"Lacking confidence or financial literacy"},{text:"Processing something emotionally that I can't see yet"},{text:"Testing me or being difficult"},{text:"Just careful — not everyone decides quickly and that's fine"}]},{text:"When I imagine my ideal client, they are someone who:",options:[{text:"Comes prepared, engages rationally, implements quickly"},{text:"Brings their real situation and trusts me with it"},{text:"Values my expertise and doesn't second-guess me"},{text:"Grows and changes over time — I'm in it for the long game"}]}]},{eyebrow:"Section 3 of 3",heading:"Patterns in difficult conversations",intro:"This section focuses on what happens for you when a client meeting gets hard — when there's resistance, emotion, or conflict. These are the moments that reveal our defaults.",questions:[{text:"When a client pushes back on my recommendation, my first physical response is usually:",options:[{text:"I can feel my body tighten — I want to hold my ground"},{text:"I notice a pull to back off and soften my position"},{text:"I stay fairly steady — I've learned to read this as normal"},{text:"I feel a spike of energy — I like the debate"}]},{text:"When a meeting goes badly, I'm most likely to tell myself:",options:[{text:"I didn't explain it well enough — I need to try differently next time"},{text:"They weren't ready — not much I can do about that"},{text:"I should have read the room earlier"},{text:"These things happen — I'll debrief with a colleague and move on"}]},{text:"When I sense a client is holding something back, I typically:",options:[{text:"Wait — I trust they'll share it when they're ready"},{text:"Ask a direct question to surface it"},{text:"Fill the silence myself — I find it uncomfortable"},{text:"Notice it and name it gently — 'it feels like there might be something else here'"}]},{text:"After a difficult client meeting, I usually:",options:[{text:"Move straight to the next thing — I don't dwell"},{text:"Replay it mentally — sometimes more than I'd like"},{text:"Debrief it briefly with someone I trust"},{text:"Journal or reflect — I process better in writing"}]}]}];
+
+const moneyProfiles=[{name:"The strong steer",desc:"You find it genuinely difficult when clients make decisions you believe are wrong. This drive comes from caring about outcomes — but it can tip into over-control when clients feel your agenda overriding theirs.",nudge:"In your next meeting: notice the moment when you shift from informing to pushing. What triggered it? Was it about them — or about you?"},{name:"The professional detach",desc:"You've learned to document and move on. This is professionally healthy — but watch for moments where detachment is protecting you rather than serving the client.",nudge:"Ask yourself once a week: is there a client I've been too quick to let go of? What would genuine follow-through look like?"},{name:"The internal worrier",desc:"When clients make choices you're uncertain about, it stays with you. That's a sign of genuine investment in their outcomes. The risk is that unprocessed worry can leak into subsequent meetings as hesitation or over-caution.",nudge:"After a meeting that bothers you: write one sentence about what you're worried about. Naming it precisely often reduces its weight."},{name:"The process believer",desc:"You trust that good process leads to good outcomes, even when clients deviate. This is a real strength — especially in turbulent markets. The watch point is occasionally over-trusting process at the expense of reading the individual in front of you.",nudge:"For your next complex client: set the process aside for five minutes and ask — what does this person actually need from me today?"}];
+
+const assumptionProfiles=[{name:"The information default",desc:"When clients are distressed, your first move is to provide more clarity. This is a common adviser reflex — and it often doesn't work. Emotional activation and information processing can't run at the same time.",nudge:"Before your next explanation, ask one question first. 'How are you feeling about all of this?' — and mean it. See what happens to the conversation."},{name:"The context seeker",desc:"You tend to look for what you don't know yet before drawing conclusions about clients. This is a significant strength — it keeps you curious and reduces the risk of misreading. Keep protecting this reflex under pressure.",nudge:"In your next complex meeting: articulate one assumption you're making about this client. Is it based on evidence — or pattern-matching to someone you've worked with before?"},{name:"The resistance reader",desc:"You sometimes read hesitation as a client testing you or being difficult. This is worth watching — it can produce a defensive posture that the client picks up on, even when you think you're staying neutral.",nudge:"When you feel a client being 'difficult': assume good faith first. Ask yourself what fear or uncertainty might be driving their behaviour, before you respond."},{name:"The steady hand",desc:"You're comfortable with clients who take their time — you don't read slowness as a problem. This creates a lot of safety for clients who need space to think. Make sure you're also able to create momentum when that's needed.",nudge:"For your next client who's taking a long time: ask directly — 'What would need to be true for you to feel ready to move?' Then work on those things specifically."}];
+
+const patternProfiles=[{name:"The defender",desc:"When challenged, you hold your ground. In the right context this builds trust — advisers should stand behind their work. The watch point is when holding ground becomes holding a position, rather than holding the relationship.",nudge:"Next time a client pushes back: pause before responding. Ask one genuine question about their concern before you re-state your case."},{name:"The pacifier",desc:"Under pressure, your first instinct is to soften or accommodate. Clients often experience this as reassuring — but it can undermine your authority over time, particularly with decisive clients who want you to hold a clear view.",nudge:"Identify one thing you softened in your last difficult meeting that you actually believed. What would it have looked like to hold that position warmly — not harshly?"},{name:"The regulator",desc:"You've developed real steadiness under pressure. This is hard-won and valuable — clients in threat state need a regulated adviser in front of them. Notice what sustains this in you and protect it deliberately.",nudge:"Make sure you're using your debrief to improve, not just to decompress — there's a difference. What's one specific thing you'd do differently next time?"},{name:"The debater",desc:"You're energised by pushback — this makes you confident and direct. The risk is that some clients experience this energy as combative, even when you're genuinely engaged. Watch for clients who go quiet after you've 'won' a point.",nudge:"After your next meeting involving disagreement: ask yourself whether the client felt heard before they felt convinced. If not — that's the gap to close."}];
+
+let currentSection=0;
+let answers=[new Array(4).fill(null),new Array(4).fill(null),new Array(4).fill(null)];
+
+function startAssessment(){showScreen('screen-questions');renderSection(0);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function updateProgress(){document.getElementById('progress-fill').style.width=(currentSection/3*100)+'%';}
+
+function renderSection(idx){
+  currentSection=idx;
+  const sec=sections[idx];
+  document.getElementById('q-eyebrow').textContent=sec.eyebrow;
+  document.getElementById('q-heading').textContent=sec.heading;
+  document.getElementById('q-intro').textContent=sec.intro;
+  document.getElementById('btn-back').style.visibility=idx===0?'hidden':'visible';
+  document.getElementById('next-label').textContent=idx<2?'Next section':'See my results';
+  const container=document.getElementById('questions-container');
+  container.innerHTML='';
+  sec.questions.forEach((q,qi)=>{
+    const block=document.createElement('div');
+    block.className='question-block';
+    const qt=document.createElement('p');
+    qt.className='question-text';
+    qt.textContent=(qi+1)+'. '+q.text;
+    block.appendChild(qt);
+    const opts=document.createElement('div');
+    opts.className='options-list';
+    q.options.forEach((opt,oi)=>{
+      const btn=document.createElement('button');
+      btn.className='option'+(answers[idx][qi]===oi?' selected':'');
+      btn.innerHTML='<div class="option-radio"></div><span class="option-text">'+opt.text+'</span>';
+      btn.onclick=()=>selectAnswer(idx,qi,oi);
+      opts.appendChild(btn);
+    });
+    block.appendChild(opts);
+    container.appendChild(block);
+  });
+  updateProgress();updateNav();
+}
+
+function selectAnswer(secIdx,qIdx,optIdx){
+  answers[secIdx][qIdx]=optIdx;
+  const blocks=document.getElementById('questions-container').querySelectorAll('.question-block');
+  blocks[qIdx].querySelectorAll('.option').forEach((o,i)=>o.classList.toggle('selected',i===optIdx));
+  updateNav();
+}
+
+function updateNav(){
+  const answered=answers[currentSection].filter(v=>v!==null).length;
+  document.getElementById('answered-count').textContent=answered+' of 4 answered';
+  document.getElementById('btn-next').disabled=answered<4;
+}
+
+function goNext(){if(currentSection<2){renderSection(currentSection+1);}else{showResults();}}
+function goBack(){if(currentSection>0)renderSection(currentSection-1);}
+
+function showResults(){
+  document.getElementById('progress-fill').style.width='100%';
+  showScreen('screen-results');
+  const container=document.getElementById('results-container');
+  container.innerHTML='';
+  const s1=answers[0];const s2=answers[1];const s3=answers[2];
+  const profiles=[
+    {section:"Your money story",...moneyProfiles[s1[2]]},
+    s2[0]===0?{section:"Assumptions about clients",...assumptionProfiles[0]}:{section:"Assumptions about clients",...assumptionProfiles[s2[2]]},
+    {section:"Patterns in difficult conversations",...patternProfiles[s3[0]]}
+  ];
+  profiles.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='result-card';
+    card.innerHTML='<p class="result-card-section">'+p.section+'</p><p class="result-pattern-name">'+p.name+'</p><p class="result-desc">'+p.desc+'</p><div class="result-nudge"><strong>Try this</strong>'+p.nudge+'</div>';
+    container.appendChild(card);
+  });
+}
+
+function restartAssessment(){
+  answers=[new Array(4).fill(null),new Array(4).fill(null),new Array(4).fill(null)];
+  currentSection=0;
+  document.getElementById('progress-fill').style.width='0%';
+  showScreen('screen-welcome');
+}
+</script>
+</body>
+</html>
