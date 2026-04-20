@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Style in Practice: DiSC Questionnaire | Dare to Care</title>
+<style>
+  :root {
+    --teal:      #00A9B5;
+    --teal-dark: #007A84;
+    --teal-lite: #E0F4F6;
+    --teal-mid:  #B2E4E9;
+    --orange:    #E87722;
+    --orange-lt: #FEF3E8;
+    --dark:      #2D2D2D;
+    --mid:       #555555;
+    --lite:      #F5F5F5;
+    --white:     #FFFFFF;
+    --d-blue:    #4472C4;
+    --d-lite:    #EEF4FC;
+    --i-yellow:  #D4A800;
+    --i-lite:    #FEFAEC;
+    --s-green:   #2E8B57;
+    --s-lite:    #EEF8F2;
+    --c-purple:  #7B4F9E;
+    --c-lite:    #F5EEF8;
+    --radius:    10px;
+    --shadow:    0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--lite);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--teal-dark);
+    padding: 28px 24px 22px;
+    text-align: center;
+  }
+  .header .course-tag {
+    font-size: 11px;
+    color: var(--teal-mid);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: clamp(20px, 4vw, 28px);
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .header p {
+    font-size: 13px;
+    color: var(--teal-lite);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  .d2c-tag {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* ── Progress ── */
+  .progress-wrap {
+    background: var(--white);
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--teal-mid);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .progress-bar-bg {
+    background: var(--teal-lite);
+    border-radius: 20px;
+    height: 8px;
+    max-width: 600px;
+    margin: 0 auto 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--teal);
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-label {
+    text-align: center;
+    font-size: 11px;
+    color: var(--mid);
+  }
+
+  /* ── Main container ── */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ── Intro card ── */
+  .intro-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    margin-bottom: 24px;
+  }
+  .intro-card h2 {
+    font-size: 18px;
+    color: var(--teal-dark);
+    margin-bottom: 12px;
+  }
+  .intro-card p {
+    font-size: 14px;
+    color: var(--mid);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  .intro-caveat {
+    background: var(--teal-lite);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--teal-dark);
+    font-style: italic;
+    line-height: 1.6;
+    margin-top: 14px;
+  }
+
+  /* ── Question cards ── */
+  .question-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 20px;
+    margin-bottom: 20px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .question-card.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    display: inline-block;
+    background: var(--teal);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .q-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  /* ── Answer options ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option {
+    border: 2px solid var(--teal-mid);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--dark);
+    line-height: 1.5;
+    transition: all 0.18s ease;
+    background: var(--white);
+    text-align: left;
+    position: relative;
+  }
+  .option:hover {
+    border-color: var(--teal);
+    background: var(--teal-lite);
+    transform: translateX(3px);
+  }
+  .option.selected {
+    border-color: var(--teal-dark);
+    background: var(--teal-lite);
+    font-weight: 600;
+  }
+  .option.selected::after {
+    content: "✓";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--teal-dark);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  /* ── Nav buttons ── */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 22px;
+    gap: 12px;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: Arial, sans-serif;
+  }
+  .btn-primary {
+    background: var(--teal-dark);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: var(--teal); }
+  .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--mid);
+    border: 1px solid #ddd;
+  }
+  .btn-ghost:hover { background: var(--lite); }
+  .btn-submit {
+    background: var(--orange);
+    color: var(--white);
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    border-radius: var(--radius);
+    margin-top: 8px;
+  }
+  .btn-submit:hover { background: #d06015; }
+  .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+  .nav-hint {
+    font-size: 12px;
+    color: #bbb;
+  }
+
+  /* ── Results ── */
+  #results { display: none; }
+
+  .result-header {
+    text-align: center;
+    padding: 32px 24px 24px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .result-header .label {
+    font-size: 11px;
+    color: var(--mid);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .result-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--white);
+    margin: 12px auto;
+  }
+  .result-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .result-header .secondary {
+    font-size: 13px;
+    color: var(--mid);
+    font-style: italic;
+  }
+
+  /* Score bar */
+  .score-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 20px;
+    margin-bottom: 20px;
+  }
+  .score-section h3 {
+    font-size: 13px;
+    color: var(--mid);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .score-letter {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .score-bar-bg {
+    flex: 1;
+    background: var(--lite);
+    border-radius: 20px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 1s ease 0.3s;
+    width: 0;
+  }
+  .score-pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--mid);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  /* Result sections */
+  .result-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 20px;
+    margin-bottom: 18px;
+  }
+  .result-section h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .result-section h3 .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .result-section p {
+    font-size: 14px;
+    color: var(--mid);
+    line-height: 1.75;
+    margin-bottom: 10px;
+  }
+  .result-section p:last-child { margin-bottom: 0; }
+
+  /* Watch-out items */
+  .watchout-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+  }
+  .watchout-list li {
+    background: var(--lite);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--dark);
+    line-height: 1.6;
+  }
+
+  /* Connection challenge */
+  .connection-box {
+    background: var(--teal-lite);
+    border: 1px solid var(--teal-mid);
+    border-radius: var(--radius);
+    padding: 18px 18px;
+    margin-top: 6px;
+  }
+  .connection-box p {
+    font-size: 14px;
+    color: var(--teal-dark);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* CTA */
+  .cta-box {
+    background: var(--teal-dark);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .cta-box h3 {
+    font-size: 18px;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .cta-box p {
+    font-size: 13px;
+    color: var(--teal-lite);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-email {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--white);
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.18s;
+  }
+  .cta-email:hover { background: #d06015; }
+
+  /* Restart */
+  .restart-row {
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 40px;
+  }
+  .btn-restart {
+    background: transparent;
+    color: var(--mid);
+    border: 1px solid #ccc;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: all 0.18s;
+  }
+  .btn-restart:hover { background: var(--lite); }
+
+  /* Footer */
+  .footer {
+    background: var(--teal-dark);
+    padding: 18px 24px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--teal-mid);
+    line-height: 1.7;
+    margin-top: 20px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .container { padding: 16px 12px 40px; }
+    .option { font-size: 13px; padding: 12px 14px; }
+    .btn { padding: 11px 20px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="d2c-tag">Dare to Care</div>
+  <p class="course-tag">Why Clients Don't Act (And What To Say Instead) &nbsp;|&nbsp; Module 5</p>
+  <h1>Your Style in Practice</h1>
+  <p>12 short scenarios to help you understand your natural style, where it serves your clients well, and where it may be getting in the way.</p>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap" id="progressWrap" style="display:none;">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">Question 1 of 12</div>
+</div>
+
+<!-- Main -->
+<div class="container">
+
+  <!-- Intro -->
+  <div class="intro-card" id="introCard">
+    <h2>Before you start</h2>
+    <p>This is not a formal DiSC assessment. It's a practical insight tool designed to help you pay attention in your client meetings, by understanding yourself a little better first.</p>
+    <p>You'll be presented with 12 short scenarios from real adviser situations. For each one, choose the response that feels most natural to you. There are no right or wrong answers.</p>
+    <p>At the end, you'll get a personalised profile with specific watch-out moments for your client conversations, and a connection challenge to help you build your range as an adviser.</p>
+    <div class="intro-caveat">
+      Most of us carry a combination of all four styles. Go with your first instinct. Don't overthink it. The result will point to your primary style, the one that tends to show up most in your work.
+    </div>
+    <div style="margin-top:24px;">
+      <button class="btn btn-submit" id="startBtn" onclick="startQuiz()">Start the questionnaire</button>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div id="questionsWrap"></div>
+
+  <!-- Nav -->
+  <div class="nav-row" id="navRow" style="display:none;">
+    <button class="btn btn-ghost" id="prevBtn" onclick="prevQ()">Back</button>
+    <span class="nav-hint" id="navHint"></span>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()" disabled>Next</button>
+  </div>
+  <div id="submitRow" style="display:none; margin-top:12px;">
+    <button class="btn btn-submit" id="submitBtn" onclick="showResults()" disabled>See my results</button>
+  </div>
+
+  <!-- Results -->
+  <div id="results"></div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  Everything DiSC&reg; is a registered trademark of John Wiley &amp; Sons, Inc. All rights reserved. Reprinted with permission.<br>
+  &copy; Dare to Care &nbsp;|&nbsp; daretocare.com.au &nbsp;|&nbsp; susan@daretocare.com.au
+</div>
+
+<script>
+// ── Questions ──────────────────────────────────────────────
+// A=D, B=i, C=S, D=C
+const questions = [
+  {
+    q: "A client arrives and immediately says: 'I'm really time poor today. Just tell me what I need to know.' You:",
+    opts: [
+      "Get straight to the recommendation. Cut everything else. You can cover the detail later if they want it.",
+      "Acknowledge the time pressure but try to build some rapport first. You feel rushed if you skip the connection.",
+      "Slow down internally even though they're rushing you. You want to make sure they feel heard before you move on.",
+      "Feel slightly anxious. You had a structured agenda and now you're not sure which parts to cut."
+    ]
+  },
+  {
+    q: "A client goes quiet mid-meeting and stops engaging. You most naturally:",
+    opts: [
+      "Name it directly. 'You've gone quiet. What's going on?' You'd rather deal with it than dance around it.",
+      "Lighten the mood. Try to re-engage with some energy or a relatable story.",
+      "Create space. Give them time. You sense they need to process and you can wait.",
+      "Review what you just said and try to identify what might have been unclear or concerning."
+    ]
+  },
+  {
+    q: "A client asks the same detailed question three different ways. You:",
+    opts: [
+      "Answer it clearly the first time and redirect. There's more to cover.",
+      "Feel the energy of the meeting dip and try to bring it back up.",
+      "Patiently answer it each time. They clearly need more reassurance and you can provide that.",
+      "Welcome the thoroughness. You answer each version carefully and specifically."
+    ]
+  },
+  {
+    q: "At the end of a meeting, a client says 'I just need to think about it.' You:",
+    opts: [
+      "Feel frustrated. You've given them everything they need. You push, gently but clearly, for a decision.",
+      "Try to re-energise the conversation and remind them why they were excited earlier.",
+      "Accept it completely. You'd rather they feel sure than feel rushed. You schedule a follow-up.",
+      "Offer to send a written summary so they have all the information to hand when they're ready."
+    ]
+  },
+  {
+    q: "When you're preparing for a client meeting, you most naturally focus on:",
+    opts: [
+      "The recommendation and the key decision points. Everything else is background.",
+      "The relationship and where they're at. You want the conversation to feel energised.",
+      "Making sure the meeting feels safe and unhurried. You want them to feel looked after.",
+      "The data and the structure. You want every element to be accurate and logical."
+    ]
+  },
+  {
+    q: "A client says: 'I'm not sure I trust this recommendation.' You:",
+    opts: [
+      "Feel challenged. You state your case clearly and confidently.",
+      "Feel deflated. You take it personally and want to rebuild the connection.",
+      "Slow right down and spend time understanding what's driving the doubt.",
+      "Get analytical. You want to know exactly which part they don't trust and address that specifically."
+    ]
+  },
+  {
+    q: "You have 10 minutes left in a meeting and haven't reached the key decision. You:",
+    opts: [
+      "Get to it immediately. Everything else was preparation.",
+      "Feel the time pressure but don't want to rush. You'd rather reschedule than damage the rapport.",
+      "Ask the client what they'd prefer. You want them to feel in control of the pacing.",
+      "Feel uncomfortable. You'd rather run overtime than present something incomplete."
+    ]
+  },
+  {
+    q: "After a difficult meeting, you most likely:",
+    opts: [
+      "Move on quickly. Brief reflection, then focus on what to do differently next time.",
+      "Talk it through with someone. You process out loud and need the connection.",
+      "Sit with it longer than most. You care deeply and find it hard to let go.",
+      "Analyse it in detail. What exactly happened, what caused it, what's the fix."
+    ]
+  },
+  {
+    q: "A client couple comes in and they clearly don't agree with each other. You:",
+    opts: [
+      "Name the disagreement and work through it directly. Avoiding it won't help anyone.",
+      "Try to find common ground quickly and keep the energy positive.",
+      "Slow right down. You want to make sure both feel heard before you attempt to move forward.",
+      "Stick to the data and structure. You feel more comfortable when there's something factual to anchor to."
+    ]
+  },
+  {
+    q: "A new client tells you they had a bad experience with a previous adviser. You:",
+    opts: [
+      "Acknowledge it briefly and quickly demonstrate through your work that you're different.",
+      "Spend real time connecting with them and showing that you genuinely care about their experience.",
+      "Listen carefully and take your time before moving into any kind of advice territory.",
+      "Ask specific questions about what went wrong so you can make sure you don't repeat it."
+    ]
+  },
+  {
+    q: "A client is clearly emotionally activated during a meeting. You:",
+    opts: [
+      "Stay calm and steer the conversation back toward the practical. You're most useful when you're solution-focused.",
+      "Match their energy empathetically and try to help them feel better as quickly as possible.",
+      "Stay with them in it. You're comfortable with emotion and know that rushing past it rarely helps.",
+      "Feel uncertain. You want to respond well but you're more confident with facts than feelings."
+    ]
+  },
+  {
+    q: "Thinking about the clients who give you the most energy, they tend to be:",
+    opts: [
+      "Decisive, action-oriented and direct. They respect your time and get to the point.",
+      "Warm, engaged and enthusiastic. They enjoy the relationship and bring positive energy.",
+      "Patient, loyal and trusting. They value the relationship above everything else.",
+      "Thorough, curious and intellectually engaged. They take the work seriously and so do you."
+    ]
+  }
+];
+
+// ── Style data ─────────────────────────────────────────────
+const styles = {
+  D: {
+    name: "Dominant",
+    color: "#4472C4",
+    lite: "#EEF4FC",
+    strengths: "You are decisive, direct and results-focused. Clients know where they stand with you, and that builds a particular kind of confidence. You don't waste their time. You lead with clarity, and when you back a recommendation, you back it fully. For many clients, that's exactly what they need.",
+    watchouts: [
+      "When a client goes quiet, you may move to solutions before they've felt heard. S and i clients in particular need to know you've understood before they can receive your recommendation.",
+      "When a client asks a lot of questions, you may experience it as a block rather than a signal. For C and S clients, questions are often the pathway to yes. Slowing down to answer them fully is not a detour. It's the route.",
+      "When a client stalls, you may push for a decision before they're ready. For S clients especially, a gentle push can create a bigger stall. The adaptation is to make the next step smaller, not to increase the pressure.",
+      "Silence in a meeting can feel like a problem to you. For measured-pace clients, silence is often just processing. Try letting it sit for longer than feels comfortable."
+    ],
+    connection: "Connection doesn't slow the meeting down. For many clients, it's the only thing that makes the meeting work. The goal isn't to become someone who lingers, it's to build in deliberate moments of acknowledgement before you move to solutions. A single well-timed question like 'how are you feeling about all of this?' can shift the whole dynamic."
+  },
+  i: {
+    name: "Influential",
+    color: "#D4A800",
+    lite: "#FEFAEC",
+    strengths: "Clients enjoy working with you. That's not a small thing. You bring energy, warmth and genuine optimism to your meetings, and for many clients, that's what makes it possible to talk about hard things. You create a room where people feel safe enough to be honest, and that trust is real.",
+    watchouts: [
+      "Agreement in the room doesn't always mean follow-through. When a client says yes enthusiastically, it can be tempting to move on. Building in a specific, concrete next step before the meeting ends makes a real difference.",
+      "For C-style clients in particular, warmth and enthusiasm can read as surface-level if the substance isn't equally strong. This client needs to see that behind the relationship is genuine precision. The investment in detail pays off.",
+      "You may over-invest in keeping the energy positive during a difficult meeting. Some conversations need to sit in discomfort for a moment before they can move forward. Staying with the hard thing, rather than lightening it, can actually build deeper trust.",
+      "The connection you create is a real strength. The growth edge is making sure the practical outcomes match the warmth of the relationship."
+    ],
+    connection: "Your connection is genuine and clients feel it. The growth edge is channelling it into outcomes. For every client, the most connecting thing you can do is help them actually move forward. A warm relationship where nothing changes isn't serving them fully. Pairing your relational strength with clear, followed-through next steps is the combination that creates lasting trust."
+  },
+  S: {
+    name: "Steady",
+    color: "#2E8B57",
+    lite: "#EEF8F2",
+    strengths: "Clients trust you, and they often stay with you for a long time because of it. You are patient, genuinely attentive, and comfortable with the emotional weight that financial conversations sometimes carry. For clients going through transitions, stress, or uncertainty, having an adviser who doesn't rush and doesn't judge is enormously valuable.",
+    watchouts: [
+      "D-style clients may experience your measured pace as a lack of conviction. This isn't about becoming someone who pushes, it's about being clear and confident when you back a recommendation. Your recommendation matters. Back it with the same warmth and care you bring to everything else.",
+      "You may over-accommodate rather than lead. Checking in with clients about what they want is valuable. But some clients need you to set the direction, not defer to them on it. Finding your confident voice is not about being less warm, it's about being useful in a different way.",
+      "When a meeting gets uncomfortable, you may move to reassurance before you've fully heard what's driving the discomfort. Staying with the difficult feeling a little longer, before you offer comfort, often leads to better outcomes.",
+      "C and D clients in particular may need you to move faster than feels natural. Watch their signals and adapt your pace upward when needed."
+    ],
+    connection: "Connection is something you do naturally and well. Your growth edge is in being willing to push, just a little, when that's what a client needs. Sometimes the most caring thing you can do is be direct. The relationship you've built gives you permission to use it."
+  },
+  C: {
+    name: "Conscientious",
+    color: "#7B4F9E",
+    lite: "#F5EEF8",
+    strengths: "When you give a recommendation, it's right. Clients who value precision and thoroughness have enormous confidence in your work, and they should. You take the responsibility of advice seriously. You prepare thoroughly, you check your thinking, and you don't cut corners. That integrity is genuinely valuable.",
+    watchouts: [
+      "D-style clients need the headline before the supporting argument. Starting with context before the recommendation can lose them before you get to your point. Lead with your conclusion and offer the detail as supporting evidence if they want it.",
+      "i and S clients need to feel the relationship before the content. Moving straight to data and structure before you've made a genuine human connection can create distance that's hard to recover. A few minutes invested in checking in pays back significantly.",
+      "Emotional moments in meetings may feel like territory you need to get through to reach the practical. For many clients, the emotional moment is the most important part of the meeting. Staying with it, rather than steering toward the facts, will often be the thing that builds the deepest trust.",
+      "You may over-prepare to the point where the meeting feels less like a conversation and more like a presentation. Some of your best work might happen when you follow the client's lead, even if it moves away from your structure."
+    ],
+    connection: "Connection doesn't mean becoming someone who talks about feelings all the time. For a C-style adviser, connection often looks like genuine curiosity about the person, not just the problem. A question like 'what does this decision mean for you beyond the numbers?' can open up a conversation that changes everything. And you don't need to be comfortable with the emotional territory to ask the question. You just need to be willing to hear the answer."
+  }
+};
+
+// ── State ──────────────────────────────────────────────────
+let answers = new Array(12).fill(null); // 0=D,1=i,2=S,3=C
+let currentQ = 0;
+
+// ── Build questions ────────────────────────────────────────
+function buildQuestions() {
+  const wrap = document.getElementById('questionsWrap');
+  wrap.innerHTML = '';
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card' + (qi === 0 ? ' active' : '');
+    card.id = 'q' + qi;
+    card.innerHTML = `
+      <div class="q-number">Question ${qi + 1} of ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts${qi}">
+        ${q.opts.map((opt, oi) => `
+          <button class="option" onclick="selectOption(${qi}, ${oi})" id="opt${qi}_${oi}">
+            ${opt}
+          </button>
+        `).join('')}
+      </div>
+    `;
+    wrap.appendChild(card);
+  });
+}
+
+function startQuiz() {
+  document.getElementById('introCard').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('navRow').style.display = 'flex';
+  buildQuestions();
+  updateProgress();
+  updateNav();
+}
+
+function selectOption(qi, oi) {
+  answers[qi] = oi;
+  // Update visual
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('opt' + qi + '_' + i);
+    if (el) el.classList.toggle('selected', i === oi);
+  }
+  // Enable next/submit
+  if (qi === questions.length - 1) {
+    document.getElementById('submitBtn').disabled = false;
+  } else {
+    document.getElementById('nextBtn').disabled = false;
+  }
+}
+
+function nextQ() {
+  if (answers[currentQ] === null) return;
+  document.getElementById('q' + currentQ).classList.remove('active');
+  currentQ++;
+  document.getElementById('q' + currentQ).classList.add('active');
+  updateProgress();
+  updateNav();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevQ() {
+  if (currentQ === 0) return;
+  document.getElementById('q' + currentQ).classList.remove('active');
+  currentQ--;
+  document.getElementById('q' + currentQ).classList.add('active');
+  updateProgress();
+  updateNav();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const pct = ((currentQ) / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Question ' + (currentQ + 1) + ' of ' + questions.length;
+}
+
+function updateNav() {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const submitRow = document.getElementById('submitRow');
+  const navRow = document.getElementById('navRow');
+
+  prevBtn.style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+
+  const isLast = currentQ === questions.length - 1;
+  navRow.style.display = isLast ? 'none' : 'flex';
+  submitRow.style.display = isLast ? 'block' : 'none';
+
+  if (!isLast) {
+    nextBtn.disabled = answers[currentQ] === null;
+  }
+  document.getElementById('navHint').textContent = answers[currentQ] === null ? 'Select an answer to continue' : '';
+}
+
+function calcScores() {
+  const scores = { D: 0, i: 0, S: 0, C: 0 };
+  const keys = ['D', 'i', 'S', 'C'];
+  answers.forEach(a => {
+    if (a !== null) scores[keys[a]]++;
+  });
+  return scores;
+}
+
+function getPrimary(scores) {
+  return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+}
+
+function getSecondary(scores) {
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  if (sorted[1][1] > 0) return sorted[1][0];
+  return null;
+}
+
+function showResults() {
+  // Hide questionnaire UI
+  document.getElementById('questionsWrap').style.display = 'none';
+  document.getElementById('navRow').style.display = 'none';
+  document.getElementById('submitRow').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+
+  const scores = calcScores();
+  const primary = getPrimary(scores);
+  const secondary = getSecondary(scores);
+  const total = questions.length;
+  const sd = styles[primary];
+
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.style.display = 'block';
+
+  const secondaryNote = secondary && secondary !== primary
+    ? `<div class="secondary">Secondary style: <strong>${secondary} (${styles[secondary].name})</strong></div>`
+    : '';
+
+  resultsDiv.innerHTML = `
+
+    <!-- Result header -->
+    <div class="result-header">
+      <div class="label">Your DiSC Style Profile</div>
+      <div class="result-badge" style="background:${sd.color};">${primary}</div>
+      <h2 style="color:${sd.color};">${primary}: ${sd.name}</h2>
+      ${secondaryNote}
+    </div>
+
+    <!-- Score bars -->
+    <div class="score-section">
+      <h3>Your Score Breakdown</h3>
+      ${['D','i','S','C'].map(k => `
+        <div class="score-row">
+          <div class="score-letter" style="background:${styles[k].color};">${k}</div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" id="bar${k}" style="background:${styles[k].color}; width:0%;"></div>
+          </div>
+          <div class="score-pct" id="pct${k}">${scores[k]}/${total}</div>
+        </div>
+      `).join('')}
+      <p style="font-size:12px; color:#aaa; margin-top:10px; font-style:italic;">
+        Most people score across multiple styles. Your primary style is the one that shows up most naturally in your work.
+      </p>
+    </div>
+
+    <!-- Strengths -->
+    <div class="result-section">
+      <h3><span class="dot" style="background:${sd.color};"></span>Your strengths</h3>
+      <p>${sd.strengths}</p>
+    </div>
+
+    <!-- Watch-outs -->
+    <div class="result-section">
+      <h3><span class="dot" style="background:${styles['D'].color !== sd.color ? sd.color : '#E87722'};"></span>Your watch-out moments</h3>
+      <p style="font-size:13px; color:#888; margin-bottom:12px;">These are the specific situations where your natural style may create unintended friction with certain clients.</p>
+      <ul class="watchout-list">
+        ${sd.watchouts.map(w => `<li>${w}</li>`).join('')}
+      </ul>
+    </div>
+
+    <!-- Connection challenge -->
+    <div class="result-section">
+      <h3><span class="dot" style="background:#00A9B5;"></span>Building connection: your growth edge</h3>
+      <div class="connection-box">
+        <p>${sd.connection}</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-box">
+      <h3>Want to go deeper?</h3>
+      <p>This questionnaire is a practical starting point. A comprehensive DiSC profile takes about 20 minutes online and gives you a personalised in-depth report covering your full style, how you communicate under pressure, your blind spots, and how to work most effectively with each client style. We debrief it together so you can apply it directly to your practice.</p>
+      <a class="cta-email" href="mailto:susan@daretocare.com.au?subject=Full DiSC Profile Enquiry">Contact Susan to find out more</a>
+    </div>
+
+    <div class="restart-row">
+      <button class="btn-restart" onclick="restartQuiz()">Start again</button>
+    </div>
+
+  `;
+
+  // Animate score bars
+  setTimeout(() => {
+    ['D','i','S','C'].forEach(k => {
+      const pct = Math.round((scores[k] / total) * 100);
+      const bar = document.getElementById('bar' + k);
+      if (bar) bar.style.width = pct + '%';
+    });
+  }, 200);
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restartQuiz() {
+  answers = new Array(12).fill(null);
+  currentQ = 0;
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('introCard').style.display = 'block';
+}
+</script>
+</body>
+</html>
